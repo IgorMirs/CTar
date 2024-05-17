@@ -14,7 +14,7 @@ int my_strcmp(const char* s1, const char* s2) {
     }
     //strings are equal
     if (s1[i] == 0 && s2[i] == 0) {
-        return 0; 
+        return 0;
     }
     //s1 is longer than s2
     else if (s1[i] != 0) {
@@ -74,4 +74,14 @@ char* my_strcat(char* s1, char* s2) {
     s1[i] = '\0';
 
     return s1;
+}
+
+bool isZeroString(char* s, unsigned size) {
+    for(size_t i = 0; i < size; i++) {
+        if(s[i] != '\0') {
+            return false;
+        }
+    }
+
+    return true;
 }
