@@ -1,24 +1,40 @@
-# Set the default compiler to gcc
-CC = gcc
+#Compiler
+CC = gcc-12
 
-# Set the flags
-CFLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
+#The Target Binary Program
+TARGET = my_zsh
 
-# Files to run
-SRC = main.c my_string.c my_tar_params.c my_tar_header.c
-TARGET = my_tar
-OBJ = main.o my_string.o my_tar_params.o my_tar_header.o
+#The Directories
+SRC_DIR = ./src
+BUILD_DIR = ./build
 
-all : $(TARGET) clean
+#Set the flags
+CFLAGS = -Wall -Wextra -Werror 
+#-fsanitize=address -g3
 
-$(TARGET) : $(OBJ)
-	gcc $(CFLAGS) -o $(TARGET) $(OBJ) 
+#Include dir
+INC = -Iinc
 
-$(OBJ) : $(SRC)
-	$(CC) $(CFLAGS) -c $(SRC)
+#Search for .c files in the source directory
+SRCS = $(shell find $(SRC_DIR) -type f -name "*.c")
+#Replace the dir name and file extensions for object files
+OBJS = $(patsubst $(SRC_DIR)/%,$(BUILD_DIR)/%,$(SRCS:.c=.o))
 
+# Default make
+all : $(TARGET)
+
+#Link
+$(TARGET) : $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $(OBJS)
+
+#Compile
+$(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(INC) -c $< -o $@
+
+#Clean only Objects
 clean:
-	rm -f *.o
+	rm -f $(BUILD_DIR)/*.o
 
 fclean: clean
 	rm -f $(TARGET)
